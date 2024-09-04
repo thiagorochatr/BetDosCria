@@ -22,8 +22,11 @@ const clientId = import.meta.env.DEV
   : import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID;
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 console.log("Aqui: ", import.meta.env.VITE_TESTE);
-console.log("Ambiente de teste? 1) ", import.meta.env.DEV );
-console.log("Ambiente de teste? 2) ", import.meta.env.DEV );
+console.log("dev? ", import.meta.env.DEV );
+console.log("prod? ", import.meta.env.PROD );
+// debugging
+console.log("All env variables:", import.meta.env);
+console.log("Process env:", process.env);
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
@@ -55,9 +58,9 @@ const Web3AuthComponent = () => {
   useEffect(() => {
     const init = async () => {
       try {
-      //   if(!clientId) {
-      //     throw new Error("WEB3AUTH_CLIENT_ID is not set");
-      //   }
+        if(!clientId) {
+          throw new Error("WEB3AUTH_CLIENT_ID is not set");
+        }
 
         const web3auth = new Web3AuthNoModal({
           clientId,
@@ -87,7 +90,7 @@ const Web3AuthComponent = () => {
           setLoggedIn(true);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Initialization error:", error);
       }
     };
 
