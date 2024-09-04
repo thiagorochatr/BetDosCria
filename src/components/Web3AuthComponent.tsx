@@ -16,10 +16,10 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 // Blockchain Calls - RPC
 
 // import.meta.env.
-// const clientId = import.meta.env.VITE_WEB3AUTH_CLIENT_ID;
-const clientId = import.meta.env.DEV 
-  ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
-  : import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID;
+const clientId = import.meta.env.WEB3AUTH_CLIENT_ID;
+// const clientId = import.meta.env.DEV 
+//   ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
+//   : import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID;
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 console.log("Aqui: ", import.meta.env.VITE_TESTE);
 console.log("dev? ", import.meta.env.DEV );
