@@ -16,7 +16,7 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 // Blockchain Calls - RPC
 
 // import.meta.env.
-const clientId = import.meta.env.WEB3AUTH_CLIENT_ID;
+// const clientId = import.meta.env.WEB3AUTH_CLIENT_ID;
 // const clientId = import.meta.env.DEV 
 //   ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
 //   : import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID;
@@ -52,8 +52,19 @@ const Web3AuthComponent = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
   // const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [clientId, setClientId] = useState<string>("");
 
   console.log(provider);
+
+  useEffect(() => {
+    const getClientId = () => {
+      const id = import.meta.env.WEB3AUTH_CLIENT_ID || import.meta.env.VITE_WEB3AUTH_CLIENT_ID || import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID || "";
+      console.log("ClientId:", id);
+      setClientId(id);
+    };
+
+    getClientId();
+  }, []);
 
   useEffect(() => {
     const init = async () => {
@@ -95,7 +106,7 @@ const Web3AuthComponent = () => {
     };
 
     init();
-  }, []);
+  }, [clientId]);
 
   const login = async () => {
     if (!web3auth) {
