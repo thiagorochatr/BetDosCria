@@ -15,10 +15,13 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
 // Blockchain Calls - RPC
 
-
-const clientId = import.meta.env.VITE_WEB3AUTH_CLIENT_ID;
-// const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
-console.log("Aqui: ", import.meta.env.VITE_TESTE);
+// import.meta.env.
+// const clientId = process.env.VITE_WEB3AUTH_CLIENT_ID;
+const clientId = import.meta.env.DEV 
+  ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
+  : process.env.REACT_APP_WEB3AUTH_CLIENT_ID;
+// const verifier = process.env.VITE_WEB3AUTH_VERIFIER;
+console.log("Aqui: ", process.env.VITE_TESTE);
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
@@ -194,9 +197,7 @@ const Web3AuthComponent = () => {
       <div className="">{loggedIn ? loggedInView : unloggedInView}</div>
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
-
-        <span>{import.meta.env.VITE_TESTE}</span>
-        <span>{import.meta.env.TESTE}</span>
+        <span>{process.env.TESTE}</span>
       </div>
 
     </div>
