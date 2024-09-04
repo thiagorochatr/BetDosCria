@@ -22,6 +22,8 @@ const clientId = import.meta.env.DEV
   : process.env.REACT_APP_WEB3AUTH_CLIENT_ID;
 // const verifier = process.env.VITE_WEB3AUTH_VERIFIER;
 console.log("Aqui: ", process.env.VITE_TESTE);
+console.log("Ambiente de teste? 1) ", import.meta.env.DEV );
+console.log("Ambiente de teste? 2) ", process.env.DEV );
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
