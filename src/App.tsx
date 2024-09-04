@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import WebApp from '@twa-dev/sdk'
+import Web3AuthComponent from './components/Web3AuthComponent'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -8,6 +9,7 @@ function App() {
   return (
     <>
       <h1>Vite + React</h1>
+      <Web3AuthComponent />
       <div className="">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
