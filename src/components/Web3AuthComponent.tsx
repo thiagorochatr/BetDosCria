@@ -55,9 +55,7 @@ const Web3AuthComponent = () => {
 
   useEffect(() => {
     const getClientId = () => {
-      const clientId = import.meta.env.DEV 
-        ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
-        : import.meta.env.WEB3AUTH_CLIENT_ID;
+      const clientId = import.meta.env.VITE_WEB3AUTH_CLIENT_ID;
 
 
       // const id = import.meta.env.WEB3AUTH_CLIENT_ID || import.meta.env.VITE_WEB3AUTH_CLIENT_ID || import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID || "";
