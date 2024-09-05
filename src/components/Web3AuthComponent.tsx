@@ -15,18 +15,21 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
 // Blockchain Calls - RPC
 
-// import.meta.env.
+
 // const clientId = import.meta.env.WEB3AUTH_CLIENT_ID;
 // const clientId = import.meta.env.DEV 
 //   ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
 //   : import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID;
+
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
-console.log("Aqui: ", import.meta.env.VITE_TESTE);
-console.log("dev? ", import.meta.env.DEV );
-console.log("prod? ", import.meta.env.PROD );
-// debugging
-console.log("All env variables:", import.meta.env);
-console.log("Process env:", process.env);
+
+console.log("1: ", import.meta.env.VITE_TESTE);
+console.log("2? ", import.meta.env.DEV );
+console.log("3? ", import.meta.env.PROD );
+
+console.log("4: ", import.meta.env.WEB3AUTH_CLIENT_ID);
+console.log("5? ", import.meta.env.VITE_WEB3AUTH_CLIENT_ID );
+console.log("6? ", import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID );
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
@@ -213,7 +216,6 @@ const Web3AuthComponent = () => {
       <div className="">{loggedIn ? loggedInView : unloggedInView}</div>
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
-        <span>{import.meta.env.TESTE}</span>
       </div>
 
     </div>
