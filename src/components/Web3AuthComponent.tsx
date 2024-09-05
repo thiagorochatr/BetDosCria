@@ -17,14 +17,6 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 
-console.log("1: ", import.meta.env.VITE_TESTE);
-console.log("2? ", import.meta.env.DEV );
-console.log("3? ", import.meta.env.PROD );
-
-console.log("4: ", );
-console.log("5? ",  );
-console.log("6? ", import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID );
-
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
     /*
@@ -51,20 +43,12 @@ const Web3AuthComponent = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [clientId, setClientId] = useState<string>("");
 
-  console.log(provider);
+  console.log("Provider: ", provider);
 
   useEffect(() => {
     const getClientId = () => {
       const clientId = import.meta.env.VITE_WEB3AUTH_CLIENT_ID;
-
-
-      // const id = import.meta.env.WEB3AUTH_CLIENT_ID || import.meta.env.VITE_WEB3AUTH_CLIENT_ID || import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID || "";
-      console.log("ClientId:", clientId);
       setClientId(clientId);
-
-
-
-
     };
 
     getClientId();
@@ -74,7 +58,7 @@ const Web3AuthComponent = () => {
     const init = async () => {
       try {
         if(!clientId) {
-          throw new Error("WEB3AUTH_CLIENT_ID is not set");
+          throw new Error("WEB3AUTH CLIENT ID is not set");
         }
 
         const web3auth = new Web3AuthNoModal({
@@ -94,13 +78,10 @@ const Web3AuthComponent = () => {
         // });
         
         web3auth.configureAdapter(openloginAdapter);
-
         setWeb3auth(web3auth);
-
         await web3auth.init();
-        
         setProvider(web3auth.provider);
-        
+
         if (web3auth.connected) {
           setLoggedIn(true);
         }
@@ -205,20 +186,10 @@ const Web3AuthComponent = () => {
 
   return (
     <div>
-      {/* {!user ? (
-        <button onClick={login}>Log In with Google</button>
-      ) : (
-        <div>
-          <p>Welcome, {user.name}</p>
-          <button onClick={logout}>Log Out</button>
-        </div>
-      )} */}
-
       <div className="">{loggedIn ? loggedInView : unloggedInView}</div>
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div>
-
     </div>
   );
 };
