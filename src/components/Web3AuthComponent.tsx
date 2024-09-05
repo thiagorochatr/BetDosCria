@@ -15,20 +15,14 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
 // Blockchain Calls - RPC
 
-
-// const clientId = import.meta.env.WEB3AUTH_CLIENT_ID;
-// const clientId = import.meta.env.DEV 
-//   ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
-//   : import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID;
-
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 
 console.log("1: ", import.meta.env.VITE_TESTE);
 console.log("2? ", import.meta.env.DEV );
 console.log("3? ", import.meta.env.PROD );
 
-console.log("4: ", import.meta.env.WEB3AUTH_CLIENT_ID);
-console.log("5? ", import.meta.env.VITE_WEB3AUTH_CLIENT_ID );
+console.log("4: ", );
+console.log("5? ",  );
 console.log("6? ", import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID );
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
@@ -61,9 +55,18 @@ const Web3AuthComponent = () => {
 
   useEffect(() => {
     const getClientId = () => {
-      const id = import.meta.env.WEB3AUTH_CLIENT_ID || import.meta.env.VITE_WEB3AUTH_CLIENT_ID || import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID || "";
-      console.log("ClientId:", id);
-      setClientId(id);
+      const clientId = import.meta.env.DEV 
+        ? import.meta.env.VITE_WEB3AUTH_CLIENT_ID 
+        : import.meta.env.WEB3AUTH_CLIENT_ID;
+
+
+      // const id = import.meta.env.WEB3AUTH_CLIENT_ID || import.meta.env.VITE_WEB3AUTH_CLIENT_ID || import.meta.env.REACT_APP_WEB3AUTH_CLIENT_ID || "";
+      console.log("ClientId:", clientId);
+      setClientId(clientId);
+
+
+
+
     };
 
     getClientId();
