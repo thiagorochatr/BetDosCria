@@ -4,10 +4,10 @@ import {
   CHAIN_NAMESPACES,
   IProvider,
   WALLET_ADAPTERS,
-  // UX_MODE,
+  UX_MODE,
   WEB3AUTH_NETWORK,
   // ADAPTER_EVENTS,
-  IWeb3Auth,
+  // IWeb3Auth,
 } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
@@ -37,10 +37,10 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
 });
 
 const Web3AuthComponent = () => {
-  const [web3auth, setWeb3auth] = useState<IWeb3Auth | null>(null);
+  const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
   const [provider, setProvider] = useState<IProvider | null>(null);
   // const [user, setUser] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(false);
   const [clientId, setClientId] = useState<string>("");
 
   console.log("Provider: ", provider);
@@ -67,15 +67,15 @@ const Web3AuthComponent = () => {
           privateKeyProvider,
         });
 
-        const openloginAdapter = new OpenloginAdapter();
-        // const openloginAdapter = new OpenloginAdapter({
-        //   adapterSettings: {
-        //     clientId,
-        //     network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-        //     uxMode: "popup",
-        //   },
-        //   privateKeyProvider,
-        // });
+        // const openloginAdapter = new OpenloginAdapter();
+        const openloginAdapter = new OpenloginAdapter({
+          adapterSettings: {
+            clientId,
+            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+            uxMode: UX_MODE.REDIRECT,
+          },
+          privateKeyProvider,
+        });
         
         web3auth.configureAdapter(openloginAdapter);
         setWeb3auth(web3auth);
@@ -96,6 +96,7 @@ const Web3AuthComponent = () => {
   const login = async () => {
     if (!web3auth) {
       console.log("web3auth not initialized yet");
+      uiConsole("web3auth not initialized yet");
       return;
     }
     const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
@@ -117,6 +118,15 @@ const Web3AuthComponent = () => {
     const user = await web3auth.getUserInfo();
     // setUser(user);
     uiConsole(user);
+  };
+
+  const authenticateUser = async () => {
+    if (!web3auth) {
+      uiConsole("web3auth not initialized yet");
+      return;
+    }
+    const idToken = await web3auth.authenticateUser();
+    uiConsole(idToken);
   };
 
   const logout = async () => {
@@ -142,34 +152,39 @@ const Web3AuthComponent = () => {
 
   const loggedInView = (
     <>
-      <div className="flex-container">
+      <div className="">
         <div>
-          <button onClick={getUserInfo} className="card">
+          <button onClick={getUserInfo} className="">
             Get User Info
           </button>
         </div>
+        <div>
+          <button onClick={authenticateUser} className="">
+            Get ID Token
+          </button>
+        </div>
         {/* <div>
-          <button onClick={getAccounts} className="card">
+          <button onClick={getAccounts} className="">
             Get Accounts
           </button>
         </div> */}
         {/* <div>
-          <button onClick={getBalance} className="card">
+          <button onClick={getBalance} className="">
             Get Balance
           </button>
         </div> */}
         {/* <div>
-          <button onClick={signMessage} className="card">
+          <button onClick={signMessage} className="">
             Sign Message
           </button>
         </div> */}
         {/* <div>
-          <button onClick={sendTransaction} className="card">
+          <button onClick={sendTransaction} className="">
             Send Transaction
           </button>
         </div> */}
         <div>
-          <button onClick={logout} className="card">
+          <button onClick={logout} className="">
             Log Out
           </button>
         </div>
@@ -178,11 +193,10 @@ const Web3AuthComponent = () => {
   );
 
   const unloggedInView = (
-    <button onClick={login} className="card">
+    <button onClick={login} className="">
       Login
     </button>
   );
-
 
   return (
     <div>
