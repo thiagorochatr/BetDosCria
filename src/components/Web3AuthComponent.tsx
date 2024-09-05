@@ -13,6 +13,16 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
+declare global {
+  interface Window {
+    Telegram: {
+      WebApp: {
+        openLink: (url: string, options?: { try_instant_view?: boolean }) => void;
+      };
+    };
+  }
+}
+
 // Blockchain Calls - RPC
 
 // import.meta.env.
@@ -77,17 +87,26 @@ const Web3AuthComponent = () => {
           clientId,
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
           privateKeyProvider,
+          // redirectUrl: window.location.origin
         });
 
-        const openloginAdapter = new OpenloginAdapter();
-        // const openloginAdapter = new OpenloginAdapter({
-        //   adapterSettings: {
-        //     clientId,
-        //     network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-        //     uxMode: "popup",
-        //   },
-        //   privateKeyProvider,
-        // });
+        // const openloginAdapter = new OpenloginAdapter();
+        const openloginAdapter = new OpenloginAdapter({
+          adapterSettings: {
+            clientId,
+            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+            uxMode: "popup", // ou "redirect"
+          },
+          privateKeyProvider,
+          // whiteLabel: {
+          //   name: "Your App Name",
+          //   logoLight: "https://web3auth.io/images/w3a-L-Favicon-1.svg",
+          //   logoDark: "https://web3auth.io/images/w3a-D-Favicon-1.svg",
+          //   defaultLanguage: "pt", // ou o idioma que preferir
+          //   dark: true, // ou false
+          // },
+        });
+
         
         web3auth.configureAdapter(openloginAdapter);
 
@@ -113,16 +132,53 @@ const Web3AuthComponent = () => {
       console.log("web3auth not initialized yet");
       return;
     }
-    const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-      loginProvider: "google",
-    });
+    try {
+      console.log("Initiating login process");
 
-    setProvider(web3authProvider);
+      if (window.Telegram?.WebApp?.openLink) {
+        // Sobrescrever a função window.open
+        const originalOpen = window.open;
+        window.open = (url, target, features) => {
+          if (url) {
+            const urlString = url instanceof URL ? url.toString() : url;
+            if (urlString.indexOf("auth.web3auth.io") !== -1) {
+              window.Telegram.WebApp.openLink(urlString);
+              return null;
+            }
+          }
+          return originalOpen(url, target, features);
+        };
+      }
 
-    if (web3auth.connected) {
-      setLoggedIn(true);
+      const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+        loginProvider: "google",
+        mfaLevel: "none",
+      });
+  
+      console.log("Login process completed");
+  
+      if (web3authProvider) {
+        setProvider(web3authProvider);
+        setLoggedIn(true);
+        console.log("User logged in successfully");
+      } else {
+        console.log("Failed to get provider after login");
+      }
+  
+    } catch (error) {
+      console.error("Login error:", error);
     }
   };
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      if (web3auth && web3auth.connected) {
+        setLoggedIn(true);
+        setProvider(web3auth.provider);
+      }
+    };
+    checkLoginStatus();
+  }, [web3auth]);
 
   const getUserInfo = async () => {
     if (!web3auth) {
@@ -210,11 +266,20 @@ const Web3AuthComponent = () => {
         </div>
       )} */}
 
-      <div className="">{loggedIn ? loggedInView : unloggedInView}</div>
+      {/* <div className="">{loggedIn ? loggedInView : unloggedInView}</div>
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
         <span>{import.meta.env.TESTE}</span>
+      </div> */}
+
+    <div>
+      <div className="">{loggedIn ? loggedInView : unloggedInView}</div>
+      <div id="console" style={{ whiteSpace: "pre-line" }}>
+        <p style={{ whiteSpace: "pre-line" }}></p>
+        <span>ClientId: {clientId}</span>
+        <span>Environment variables: {JSON.stringify(import.meta.env, null, 2)}</span>
       </div>
+    </div>
 
     </div>
   );
