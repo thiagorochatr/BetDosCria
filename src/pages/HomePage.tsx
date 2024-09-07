@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import ViemRpc from "../rpcs/viemRPC";
+import useBalance from "../hooks/useBalance";
 
 interface Game {
   id: number;
@@ -9,13 +10,23 @@ interface Game {
   contractAddress: string;
 }
 
+interface FaucetResponse {
+  message: string;
+  txHash: string;
+}
+
 const HomePage: React.FC = () => {
   const { web3auth, provider, isInitialized, logout } = useAuth();
   const [address, setAddress] = useState<string>("");
-  const [balance, setBalance] = useState<string>("");
+  //   const [balance, setBalance] = useState<string>("");
   const [availableGames, setAvailableGames] = useState<Game[]>([]);
   const [participatingGames, setParticipatingGames] = useState<Game[]>([]);
+  const [isFaucetLoading, setIsFaucetLoading] = useState<boolean>(false);
+  const [faucetResponse, setFaucetResponse] = useState<FaucetResponse | null>(
+    null
+  );
   const navigate = useNavigate();
+  const { balance, isLoading, error } = useBalance();
 
   useEffect(() => {
     if (isInitialized && web3auth?.connected) {
@@ -30,10 +41,10 @@ const HomePage: React.FC = () => {
     }
     const rpc = new ViemRpc(provider);
     const userAddress = await rpc.getAccounts();
-    const userBalance = await rpc.getBalance();
+    // const userBalance = await rpc.getBalance();
 
     setAddress(userAddress);
-    setBalance(userBalance);
+    // setBalance(userBalance);
 
     // Mock data for games - replace with actual contract calls
     setAvailableGames([
@@ -46,8 +57,21 @@ const HomePage: React.FC = () => {
   };
 
   const requestFaucet = async (): Promise<void> => {
-    // Implement faucet request logic
-    console.log("Requesting from faucet");
+    setIsFaucetLoading(true);
+    try {
+      const response = await fetch(
+        `https://chiliz-faucet.vercel.app?address=${address}`
+      );
+      const data: FaucetResponse = await response.json();
+      setFaucetResponse(data);
+      // Refresh balance after successful faucet request
+      fetchUserData();
+    } catch (error) {
+      console.error("Error requesting faucet:", error);
+      setFaucetResponse({ message: "Faucet request failed", txHash: "" });
+    } finally {
+      setIsFaucetLoading(false);
+    }
   };
 
   const viewGameDetails = (contractAddress: string): void => {
@@ -56,7 +80,7 @@ const HomePage: React.FC = () => {
 
   const handleLogout = async (): Promise<void> => {
     await logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -69,9 +93,12 @@ const HomePage: React.FC = () => {
         <div>
           <button
             onClick={requestFaucet}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
+            disabled={isFaucetLoading}
+            className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2 ${
+              isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Request Faucet
+            {isFaucetLoading ? "Requesting..." : "Request Faucet"}
           </button>
           <button
             onClick={handleLogout}
@@ -81,6 +108,31 @@ const HomePage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {faucetResponse && (
+        <div
+          className={`mb-4 p-4 rounded ${
+            faucetResponse.message.includes("successful")
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          <p>{faucetResponse.message}</p>
+          {faucetResponse.txHash && (
+            <p>
+              Transaction Hash:{" "}
+              <a
+                href={`https://testnet.chiliscan.com/address/${faucetResponse.txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:text-blue-600"
+              >
+                {faucetResponse.txHash}
+              </a>
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="mb-8">
         <p className="text-sm text-gray-600">Balance:</p>
