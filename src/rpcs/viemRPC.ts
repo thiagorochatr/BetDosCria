@@ -6,10 +6,8 @@ import {
   parseEther
 } from 'viem';
 import {
-  mainnet,
-  polygonAmoy,
-  sepolia
-} from 'viem/chains'; //@remind
+  spicy
+} from 'viem/chains';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IProvider } from "@web3auth/base";
 import { exampleABI } from '../abis/exampleABI';
@@ -23,17 +21,8 @@ export default class ViemRpc {
     this.provider = provider;
   }
 
-  getViewChain() { //@remind
-    switch (this.provider.chainId) {
-      case "1":
-        return mainnet;
-      case "0x13882":
-        return polygonAmoy;
-      case "0xaa36a7":
-        return sepolia;
-      default:
-        return mainnet;
-    }
+  getViewChain() {
+    return spicy;
   }
 
   async getChainId(): Promise<any> {

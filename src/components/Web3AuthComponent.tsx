@@ -16,22 +16,23 @@ import ViemRpc from '../rpcs/viemRPC';
 
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 
+const CHILIZ_SPICY_TESTNET_CONFIG = {
+  chainNamespace: CHAIN_NAMESPACES.EIP155,
+  chainId: "0x15b32", // Hexadecimal string for 88882
+  rpcTarget: "https://spicy-rpc.chiliz.com/",
+  displayName: "Chiliz Spicy Testnet",
+  blockExplorerUrl: "https://testnet.chiliscan.com/",
+  ticker: "CHZ",
+  tickerName: "Chiliz",
+};
+
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: {
     /*
       pass the chain config that you want to connect with.
       all chainConfig fields are required.
       */
-    chainConfig: {
-      chainNamespace: CHAIN_NAMESPACES.EIP155,
-      chainId: "0xaa36a7", // Please use 0x1 for Mainnet
-      rpcTarget: "https://rpc.ankr.com/eth_sepolia",
-      displayName: "Ethereum Sepolia Testnet",
-      blockExplorerUrl: "https://sepolia.etherscan.io",
-      ticker: "ETH",
-      tickerName: "Ethereum",
-      logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-    },
+    chainConfig: CHILIZ_SPICY_TESTNET_CONFIG
   },
 });
 
@@ -62,7 +63,7 @@ const Web3AuthComponent = () => {
 
         const web3auth = new Web3AuthNoModal({
           clientId,
-          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET, //@remind
           privateKeyProvider,
         });
 
@@ -70,7 +71,7 @@ const Web3AuthComponent = () => {
         const openloginAdapter = new OpenloginAdapter({
           adapterSettings: {
             clientId,
-            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET, //@remind
             uxMode: UX_MODE.REDIRECT,
           },
           privateKeyProvider,
