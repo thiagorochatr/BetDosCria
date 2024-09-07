@@ -12,6 +12,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { IW3AUser } from '../interfaces/IW3AUser';
+import ViemRpc from '../rpcs/viemRPC';
 
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 
@@ -41,7 +42,7 @@ const Web3AuthComponent = () => {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(false);
   const [clientId, setClientId] = useState<string>("");
   
-  console.log(provider, user);
+  console.log(user);
 
   useEffect(() => {
     const getClientId = () => {
@@ -139,14 +140,65 @@ const Web3AuthComponent = () => {
     uiConsole("logged out");
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function uiConsole(...args: any[]): void {
-    const el = document.querySelector("#console>p");
-    if (el) {
-      el.innerHTML = JSON.stringify(args || {}, null, 2);
-      console.log(...args);
+  const getChainId = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
     }
+    const rpc = new ViemRpc(provider);
+    const chainId = await rpc.getChainId();
+    uiConsole(chainId);
   }
+  
+  const getAccounts = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const rpc = new ViemRpc(provider);
+    const address = await rpc.getAccounts();
+    uiConsole(address);
+  };
+
+  const getBalance = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const rpc = new ViemRpc(provider);
+    const balance = await rpc.getBalance();
+    uiConsole(balance);
+  };
+
+  const sendTransaction = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const rpc = new ViemRpc(provider);
+    const receipt = await rpc.sendTransaction();
+    uiConsole(receipt);
+  };
+
+  const signMessage = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const rpc = new ViemRpc(provider);
+    const signedMessage = await rpc.signMessage();
+    uiConsole(signedMessage);
+  };
+
+  const getPrivateKey = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const rpc = new ViemRpc(provider);
+    const privateKey = await rpc.getPrivateKey();
+    uiConsole(privateKey);
+  };
 
   const loggedInView = (
     <>
@@ -161,26 +213,36 @@ const Web3AuthComponent = () => {
             Get ID Token
           </button>
         </div>
-        {/* <div>
+        <div>
+          <button onClick={getChainId} className="">
+            Get Chain ID
+          </button>
+        </div>
+        <div>
           <button onClick={getAccounts} className="">
             Get Accounts
           </button>
-        </div> */}
-        {/* <div>
+        </div>
+        <div>
           <button onClick={getBalance} className="">
             Get Balance
           </button>
-        </div> */}
-        {/* <div>
+        </div>
+        <div>
           <button onClick={signMessage} className="">
             Sign Message
           </button>
-        </div> */}
-        {/* <div>
+        </div>
+        <div>
           <button onClick={sendTransaction} className="">
             Send Transaction
           </button>
-        </div> */}
+        </div>
+        <div>
+          <button onClick={getPrivateKey} className="">
+            Get Private Key
+          </button>
+        </div>
         <div>
           <button onClick={logout} className="">
             Log Out
@@ -195,6 +257,15 @@ const Web3AuthComponent = () => {
       Login
     </button>
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function uiConsole(...args: any[]): void {
+    const el = document.querySelector("#console>p");
+    if (el) {
+      el.innerHTML = JSON.stringify(args || {}, null, 2);
+      console.log(...args);
+    }
+  }
 
   return (
     <div>
