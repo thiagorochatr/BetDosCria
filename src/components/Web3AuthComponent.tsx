@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   CHAIN_NAMESPACES,
   IProvider,
@@ -11,8 +11,10 @@ import {
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { IW3AUser } from '../interfaces/IW3AUser';
-import ViemRpc from '../rpcs/viemRPC';
+import { IW3AUser } from "../interfaces/IW3AUser";
+import ViemRpc from "../rpcs/viemRPC";
+import { Client } from "@xmtp/xmtp-js";
+import { Wallet } from "ethers";
 
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 
@@ -32,7 +34,7 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
       pass the chain config that you want to connect with.
       all chainConfig fields are required.
       */
-    chainConfig: CHILIZ_SPICY_TESTNET_CONFIG
+    chainConfig: CHILIZ_SPICY_TESTNET_CONFIG,
   },
 });
 
@@ -42,7 +44,7 @@ const Web3AuthComponent = () => {
   const [user, setUser] = useState<IW3AUser | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(false);
   const [clientId, setClientId] = useState<string>("");
-  
+
   console.log(user);
 
   useEffect(() => {
@@ -57,7 +59,7 @@ const Web3AuthComponent = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        if(!clientId) {
+        if (!clientId) {
           throw new Error("WEB3AUTH CLIENT ID is not set");
         }
 
@@ -76,7 +78,7 @@ const Web3AuthComponent = () => {
           },
           privateKeyProvider,
         });
-        
+
         web3auth.configureAdapter(openloginAdapter);
         setWeb3auth(web3auth);
         await web3auth.init();
@@ -99,9 +101,12 @@ const Web3AuthComponent = () => {
       uiConsole("web3auth not initialized yet");
       return;
     }
-    const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-      loginProvider: "google",
-    });
+    const web3authProvider = await web3auth.connectTo(
+      WALLET_ADAPTERS.OPENLOGIN,
+      {
+        loginProvider: "google",
+      }
+    );
 
     setProvider(web3authProvider);
 
@@ -149,8 +154,8 @@ const Web3AuthComponent = () => {
     const rpc = new ViemRpc(provider);
     const chainId = await rpc.getChainId();
     uiConsole(chainId);
-  }
-  
+  };
+
   const getAccounts = async () => {
     if (!provider) {
       uiConsole("provider not initialized yet");
@@ -201,6 +206,34 @@ const Web3AuthComponent = () => {
     uiConsole(privateKey);
   };
 
+  const getXMTP = async () => {
+    if (!provider) {
+      uiConsole("provider not initialized yet");
+      return;
+    }
+    const rpc = new ViemRpc(provider);
+    // const xmtp = await rpc.getXMTP();
+    const signer = await rpc.getPrivateKey();
+    // ethersjs wallet
+    const walletSigner = new Wallet(signer);
+    // Create the client with your wallet. This will connect to the XMTP development network by default
+    const xmtp = await Client.create(walletSigner, { env: "dev" });
+    // Start a conversation with XMTP
+    const conversation = await xmtp.conversations.newConversation(
+      "0x3F11b27F323b62B159D2642964fa27C46C841897"
+    );
+    // Load all messages in the conversation
+    const messages = await conversation.messages();
+
+    console.log(messages);
+    // Send a message
+    await conversation.send("gm");
+    // Listen for new messages in the conversation
+    for await (const message of await conversation.streamMessages()) {
+      console.log(`[${message.senderAddress}]: ${message.content}`);
+    }
+  };
+
   const loggedInView = (
     <>
       <div className="">
@@ -242,6 +275,11 @@ const Web3AuthComponent = () => {
         <div>
           <button onClick={getPrivateKey} className="">
             Get Private Key
+          </button>
+        </div>
+        <div>
+          <button onClick={getXMTP} className="">
+            Get XMTP
           </button>
         </div>
         <div>
