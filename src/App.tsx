@@ -1,4 +1,4 @@
-import Web3AuthComponent from './components/Web3AuthComponent'
+// import Web3AuthComponent from './components/Web3AuthComponent'
 
 function App() {
   return (

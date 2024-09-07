@@ -39,8 +39,10 @@ const GamePage: React.FC = () => {
   const [topHolders, setTopHolders] = useState<TopHolder[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [conversation, setConversation] = useState<any>(null);
   const navigate = useNavigate();
+  console.log(provider);
 
   useEffect(() => {
     if (isInitialized && web3auth?.connected) {
