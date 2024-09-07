@@ -1,4 +1,3 @@
-// imports
 import { useState, useEffect } from 'react';
 import {
   CHAIN_NAMESPACES,
@@ -12,8 +11,7 @@ import {
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-
-// Blockchain Calls - RPC
+import { IW3AUser } from '../interfaces/IW3AUser';
 
 // const verifier = import.meta.env.VITE_WEB3AUTH_VERIFIER;
 
@@ -39,11 +37,11 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
 const Web3AuthComponent = () => {
   const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
   const [provider, setProvider] = useState<IProvider | null>(null);
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState<IW3AUser | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(false);
   const [clientId, setClientId] = useState<string>("");
-
-  console.log("Provider: ", provider);
+  
+  console.log(provider, user);
 
   useEffect(() => {
     const getClientId = () => {
@@ -116,7 +114,7 @@ const Web3AuthComponent = () => {
       return;
     }
     const user = await web3auth.getUserInfo();
-    // setUser(user);
+    setUser(user);
     uiConsole(user);
   };
 
@@ -137,7 +135,7 @@ const Web3AuthComponent = () => {
     await web3auth.logout();
     setProvider(null);
     setLoggedIn(false);
-    // setUser(null);
+    setUser(null);
     uiConsole("logged out");
   };
 
