@@ -65,7 +65,7 @@ const Web3AuthComponent = () => {
 
         const web3auth = new Web3AuthNoModal({
           clientId,
-          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET, //@remind
+          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
           privateKeyProvider,
         });
 
@@ -73,7 +73,7 @@ const Web3AuthComponent = () => {
         const openloginAdapter = new OpenloginAdapter({
           adapterSettings: {
             clientId,
-            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET, //@remind
+            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
             uxMode: UX_MODE.REDIRECT,
           },
           privateKeyProvider,

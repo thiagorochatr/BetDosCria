@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { CHAIN_NAMESPACES, IProvider } from "@web3auth/base";
+import { CHAIN_NAMESPACES, IProvider, UX_MODE, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { Client } from "@xmtp/xmtp-js";
@@ -36,8 +36,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const init = async () => {
       try {
+        const clientId = import.meta.env.VITE_WEB3AUTH_CLIENT_ID;
+        
         const web3auth = new Web3AuthNoModal({
-          clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+          clientId,
           web3AuthNetwork: "sapphire_devnet",
           chainConfig: CHILIZ_SPICY_TESTNET_CONFIG,
         });
@@ -47,6 +49,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         const openloginAdapter = new OpenloginAdapter({
+          adapterSettings: {
+            clientId,
+            network: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+            uxMode: UX_MODE.REDIRECT,
+          },
           privateKeyProvider,
         });
 
