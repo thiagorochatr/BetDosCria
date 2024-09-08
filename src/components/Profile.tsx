@@ -1,3 +1,5 @@
+import { formatWalletAddress } from "../tools/formatWalletAddress";
+
 interface ProfileProps {
   name?: string;
   avatarUrl?: string;
@@ -24,11 +26,4 @@ export function Profile(props: ProfileProps) {
       <img src={props.avatarUrl} className="h-10 w-10 rounded-full" />
     </div>
   )
-}
-
-function formatWalletAddress(address: string): string {
-    const prefix = address.slice(0, 4); // "0x" plus first two characters
-    const suffix = address.slice(-4);   // Last four characters
-
-    return `${prefix}...${suffix}`;
 }
