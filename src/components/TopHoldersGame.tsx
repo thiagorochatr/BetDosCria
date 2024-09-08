@@ -1,3 +1,4 @@
+import { GiReceiveMoney } from "react-icons/gi";
 import { TopHolder } from "../interfaces/ITopHolder";
 
 interface TopHoldersGameProps {
@@ -10,8 +11,12 @@ export function TopHoldersGame(props: TopHoldersGameProps) {
       <h3 className="text-xl font-semibold mb-4">Top 5 Holders</h3>
       <ul>
         {props.topHolders.map((holder, index) => (
-          <li key={index} className="mb-2">
-            {holder.address}: {holder.amount} CHZ
+          <li key={index} className="mb-2 text-lg font-normal flex items-center justify-start gap-3">
+            <span className="font-bold text-chiliz">
+              {holder.address}
+            </span>
+            {<GiReceiveMoney />}
+            {holder.amount} CHZ
           </li>
         ))}
       </ul>

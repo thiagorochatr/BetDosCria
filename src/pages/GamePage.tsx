@@ -152,7 +152,7 @@ const GamePage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-full">
+    <div className="container mx-auto px-4 py-8 min-h-full bg-pattern bg-no-repeat bg-center">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Game Details</h1>
         <button

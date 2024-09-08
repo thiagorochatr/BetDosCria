@@ -28,7 +28,7 @@ export function ChatGame(props: ChatGameProps) {
   return (
     <div className="">
       <h3 className="text-xl font-semibold mb-4">Chat</h3>
-      <div className="border rounded p-4 mb-4 h-40 overflow-y-auto">
+      <div className="border rounded p-4 mb-4 max-h-[480px] overflow-y-auto">
         {props.messages.map((msg, index) => (
           <div key={index} className="mb-2">
             <span className="font-bold text-chiliz">

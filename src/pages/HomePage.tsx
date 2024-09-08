@@ -135,7 +135,7 @@ const HomePage: React.FC = () => {
         <button
           onClick={requestFaucet}
           disabled={isFaucetLoading}
-          className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
+          className={`bg-chiliz text-slate-50 px-4 py-2 rounded hover:bg-chiliz/80 mr-2 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
         >
           {isFaucetLoading ? "Requesting..." : "Request Faucet"}
@@ -193,7 +193,7 @@ const HomePage: React.FC = () => {
             <div className="flex items-center p-1 gap-4" style={{ minWidth: 'max-content' }}>
               {navItems.map((item, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  <div className="shadow-sm shadow-yellow-500 w-auto min-w-16 px-2 h-16 bg-gray-200 rounded-xl flex flex-col items-center justify-center gap-0.5">
+                  <div className="shadow-sm shadow-chiliz w-auto min-w-16 px-2 h-16 bg-slate-200 rounded-xl flex flex-col items-center justify-center gap-0.5">
                     <div className="text-black">
                       {item.icon}
                     </div>
@@ -221,7 +221,7 @@ const HomePage: React.FC = () => {
               <div className="flex items-end justify-between">
                 <button
                   onClick={() => viewGameDetails(game.contractAddress)}
-                  className="flex items-center justify-center gap-1 mt-2 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
+                  className="flex items-center justify-center gap-1 mt-2 bg-chiliz text-white px-3 py-1 rounded text-sm hover:bg-chiliz/80"
                 >
                   View Details
                   <FaArrowRight />
@@ -254,7 +254,7 @@ const HomePage: React.FC = () => {
               <div className="flex items-end justify-between">
                 <button
                   onClick={() => viewGameDetails(game.contractAddress)}
-                  className="flex items-center justify-center gap-1 mt-2 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
+                  className="flex items-center justify-center gap-1 mt-2 bg-chiliz text-white px-3 py-1 rounded text-sm hover:bg-chiliz/80"
                 >
                   View Details
                   <FaArrowRight />
