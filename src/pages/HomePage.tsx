@@ -45,8 +45,8 @@ const HomePage: React.FC = () => {
     setAddress(userAddress);
     setBalance(userBalance);
 
-    setUserName(user?.name); // @remind
-    setAvatarUrl(user?.profileImage);
+    setUserName(user?.name ?? ""); // Use empty string as fallback
+    setAvatarUrl(user?.profileImage ?? ""); // Use empty string as fallback
 
     // Mock data for games - replace with actual contract calls
     setAvailableGames([
