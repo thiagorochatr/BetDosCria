@@ -149,6 +149,31 @@ export default class ViemRpc {
     }
   }
 
+  async signMessage1(account: any, message: any) {
+    try {
+      const walletClient = createWalletClient({
+        chain: this.getViewChain(),
+        transport: custom(this.provider)
+      });
+      
+      // data for signing
+      const address =  account;
+      const originalMessage = message;
+
+      // Sign the message
+      const hash = await walletClient.signMessage({
+        account: address[0],
+        message: originalMessage
+      });
+
+      console.log(hash)
+
+      return hash.toString(); 
+    } catch(error) {
+      return error;
+    }
+  }
+
   async readContract() {
     try {
       const publicClient = createPublicClient({

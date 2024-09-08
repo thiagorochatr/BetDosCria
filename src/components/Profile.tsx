@@ -9,6 +9,7 @@ interface ProfileProps {
 
 export function Profile(props: ProfileProps) {
   const walletMasked = formatWalletAddress(props.address[0]);
+  console.log("user wallet", props.address[0])
   return (
     <div className="flex items-center gap-3 text-right text-xs">
       <div className="flex flex-col">
