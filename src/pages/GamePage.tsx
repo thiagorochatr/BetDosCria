@@ -9,6 +9,7 @@ import { GameInfo } from "../interfaces/IGameInfo";
 import { ChatMessage } from "../interfaces/IChatMessage";
 import { FaArrowLeft } from "react-icons/fa";
 import { ChatGame } from "../components/ChatGame";
+import { DetailsGame } from "../components/DetailsGame";
 
 const tabs = ['Details', 'Chat', 'Activity', 'Top Holders'];
 
@@ -16,8 +17,6 @@ const GamePage: React.FC = () => {
   const { contractAddress } = useParams<{ contractAddress: string }>();
   const { web3auth, provider, xmtpClient, isInitialized } = useAuth();
   const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
-  const [betAmount, setBetAmount] = useState<string>("");
-  const [betSide, setBetSide] = useState<"A" | "B">("A");
   const [topHolders, setTopHolders] = useState<TopHolder[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -55,7 +54,7 @@ const GamePage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <div>Details Content</div>;
+        return <DetailsGame gameInfo={gameInfo} />;
       case 1:
         return <ChatGame messages={messages} conversation={conversation} />;
       case 2:
@@ -148,104 +147,49 @@ const GamePage: React.FC = () => {
     }
   };
 
-  const handleBet = async () => {
-    // Implement betting logic here
-    console.log(`Betting ${betAmount} on side ${betSide}`);
-  };
-
   const handleGoBack = () => {
     navigate(-1);
   };
 
   return (
-    <>
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="container mx-auto px-4 py-8 min-h-full">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Game Details</h1>
         <button
           onClick={handleGoBack}
-          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+          className="flex items-center justify-center gap-1 bg-chiliz text-slate-50 px-4 py-2 rounded hover:bg-chiliz/80 text-sm"
         >
           <FaArrowLeft />
           Go Back
         </button>
       </div>
 
-
-
-
-      {gameInfo && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <div>
-            <img
-              src={gameInfo.image}
-              alt={gameInfo.name}
-              className="w-full rounded-lg shadow-lg"
-            />
-          </div>
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">{gameInfo.name}</h2>
-            <p className="mb-2">Start Date: {gameInfo.startDate}</p>
-            <p className="mb-2">End Date: {gameInfo.endDate}</p>
-            <p className="mb-2">Total Players: {gameInfo.totalPlayers}</p>
-            <p className="mb-4">Jackpot: {gameInfo.jackpot} CHZ</p>
-
-            <div className="mb-4">
-              <input
-                type="number"
-                value={betAmount}
-                onChange={(e) => setBetAmount(e.target.value)}
-                className="border rounded px-2 py-1 mr-2"
-                placeholder="Bet amount"
-              />
-              <select
-                value={betSide}
-                onChange={(e) => setBetSide(e.target.value as "A" | "B")}
-                className="border rounded px-2 py-1 mr-2"
-              >
-                <option value="A">Side A</option>
-                <option value="B">Side B</option>
-              </select>
+      <div className="mx-auto p-4">
+        <div className="relative">
+          <div className="flex space-x-4 border-b">
+            {tabs.map((tab, index) => (
               <button
-                onClick={handleBet}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                key={tab}
+                ref={(el) => (tabsRef.current[index] = el)}
+                className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
+                  activeTab === index ? 'text-chiliz' : 'text-slate-400 hover:text-slate-600'
+                }`}
+                onClick={() => setActiveTab(index)}
               >
-                Place Bet
+                {tab}
               </button>
-            </div>
+            ))}
           </div>
+          <div
+            className="absolute bottom-0 h-0.5 bg-chiliz transition-all duration-300"
+            style={indicatorStyle}
+          />
         </div>
-      )}
-
-    </div>
-
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="relative">
-        <div className="flex space-x-4 border-b">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab}
-              ref={(el) => (tabsRef.current[index] = el)}
-              className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
-                activeTab === index ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setActiveTab(index)}
-            >
-              {tab}
-            </button>
-          ))}
+        <div className="mt-4 transition-all duration-300 ease-in-out">
+          {renderTabContent()}
         </div>
-        <div
-          className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
-          style={indicatorStyle}
-        />
-      </div>
-      <div className="mt-4 transition-all duration-300 ease-in-out">
-        {renderTabContent()}
       </div>
     </div>
-    
-    </>
   );
 
 };
