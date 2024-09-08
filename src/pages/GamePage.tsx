@@ -11,8 +11,9 @@ import { FaArrowLeft } from "react-icons/fa";
 import { ChatGame } from "../components/ChatGame";
 import { DetailsGame } from "../components/DetailsGame";
 import { GameDetails, useGame } from "../contexts/GameContext";
+import { NewsGame } from "../components/NewsGame";
 
-const tabs = ["Details", "Chat", "Activity", "Top Holders"];
+const tabs = ['Details', 'News', 'Chat', 'Activity', 'Rank'];
 
 const GamePage: React.FC = () => {
   const { contractAddress } = useParams<{ contractAddress: string }>();
@@ -74,10 +75,12 @@ const GamePage: React.FC = () => {
           />
         );
       case 1:
-        return <ChatGame messages={messages} conversation={conversation} />;
+        return <NewsGame />;
       case 2:
-        return <ActivityGame activities={activities} />;
+        return <ChatGame messages={messages} conversation={conversation} />;
       case 3:
+        return <ActivityGame activities={activities} />;
+      case 4:
         return <TopHoldersGame topHolders={topHolders} />;
       default:
         return null;
@@ -124,6 +127,8 @@ const GamePage: React.FC = () => {
       },
     ]);
   };
+
+  // const recipients = ["0x661Cb7aA99e91C2B43DB1859B2a2b0672d7DED55", "0x839d343663625e725cf311eeE375Fc7b8DBc165A"]; // Replace with actual 
 
   const initializeConversation = async () => {
     if (!xmtpClient) {
@@ -188,10 +193,8 @@ const GamePage: React.FC = () => {
               <button
                 key={tab}
                 ref={(el) => (tabsRef.current[index] = el)}
-                className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
-                  activeTab === index
-                    ? "text-chiliz"
-                    : "text-slate-400 hover:text-slate-600"
+                className={`py-2 px-2 text-sm font-medium transition-colors duration-300 ${
+                  activeTab === index ? 'text-chiliz' : 'text-slate-400 hover:text-slate-600'
                 }`}
                 onClick={() => setActiveTab(index)}
               >
