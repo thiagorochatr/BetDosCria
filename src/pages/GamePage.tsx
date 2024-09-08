@@ -7,6 +7,8 @@ import { TopHolder } from "../interfaces/ITopHolder";
 import { TopHoldersGame } from "../components/TopHoldersGame";
 import { GameInfo } from "../interfaces/IGameInfo";
 import { ChatMessage } from "../interfaces/IChatMessage";
+import { FaArrowLeft } from "react-icons/fa";
+import { ChatGame } from "../components/ChatGame";
 
 const tabs = ['Details', 'Chat', 'Activity', 'Top Holders'];
 
@@ -16,7 +18,6 @@ const GamePage: React.FC = () => {
   const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
   const [betAmount, setBetAmount] = useState<string>("");
   const [betSide, setBetSide] = useState<"A" | "B">("A");
-  const [chatMessage, setChatMessage] = useState<string>("");
   const [topHolders, setTopHolders] = useState<TopHolder[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -56,7 +57,7 @@ const GamePage: React.FC = () => {
       case 0:
         return <div>Details Content</div>;
       case 1:
-        return <div>Chat Content</div>;
+        return <ChatGame messages={messages} conversation={conversation} />;
       case 2:
         return <ActivityGame activities={activities} />;
       case 3:
@@ -152,20 +153,6 @@ const GamePage: React.FC = () => {
     console.log(`Betting ${betAmount} on side ${betSide}`);
   };
 
-  const handleSendMessage = async () => {
-    if (!conversation) {
-      console.log("Conversation not initialized");
-      return;
-    }
-
-    try {
-      await conversation.send(chatMessage);
-      setChatMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
-
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -179,6 +166,7 @@ const GamePage: React.FC = () => {
           onClick={handleGoBack}
           className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
         >
+          <FaArrowLeft />
           Go Back
         </button>
       </div>
@@ -229,44 +217,6 @@ const GamePage: React.FC = () => {
         </div>
       )}
 
-
-
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold mb-4">Chat</h3>
-        <div className="border rounded p-4 mb-4 h-40 overflow-y-auto">
-          {messages.map((msg, index) => (
-            <div key={index} className="mb-2">
-              <span className="font-bold">
-                {msg.senderAddress.slice(0, 6)}...
-              </span>
-              : {msg.content}
-              <span className="text-xs text-gray-500 ml-2">
-                {msg.timestamp}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="flex">
-          <input
-            type="text"
-            value={chatMessage}
-            onChange={(e) => setChatMessage(e.target.value)}
-            className="border rounded px-2 py-1 flex-grow mr-2"
-            placeholder="Type your message..."
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleSendMessage();
-              }
-            }}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Send
-          </button>
-        </div>
-      </div>
     </div>
 
     <div className="max-w-4xl mx-auto p-4">
@@ -297,36 +247,6 @@ const GamePage: React.FC = () => {
     
     </>
   );
-
-
-  // return (
-    // <div className="max-w-4xl mx-auto p-4">
-    //   <div className="relative">
-    //     <div className="flex space-x-4 border-b">
-    //       {tabs.map((tab, index) => (
-    //         <button
-    //           key={tab}
-    //           ref={(el) => (tabsRef.current[index] = el)}
-    //           className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
-    //             activeTab === index ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
-    //           }`}
-    //           onClick={() => setActiveTab(index)}
-    //         >
-    //           {tab}
-    //         </button>
-    //       ))}
-    //     </div>
-    //     <div
-    //       className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
-    //       style={indicatorStyle}
-    //     />
-    //   </div>
-    //   <div className="mt-4 transition-all duration-300 ease-in-out">
-    //     {renderTabContent()}
-    //   </div>
-    // </div>
-  // );
-
 
 };
 
