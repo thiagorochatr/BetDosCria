@@ -9,6 +9,8 @@ import { GiBasketballBasket, GiGolfFlag, GiSoccerBall } from "react-icons/gi";
 import { FaArrowRight, FaExternalLinkAlt, FaFootballBall, FaRegStar, FaStar } from "react-icons/fa";
 import { BsPersonWheelchair } from "react-icons/bs";
 import { formatWalletAddress } from "../tools/formatWalletAddress";
+import chilizImg1 from "../assets/chiliz-logo-2023.svg"
+import chilizImg2 from "../assets/chiliz-logo-v3.png"
 
 
 interface Game {
@@ -34,8 +36,11 @@ const HomePage: React.FC = () => {
     null
   );
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { balance, isLoading, error } = useBalance();
+  const {
+    balance,
+    // isLoading,
+    // error
+  } = useBalance();
   const [userName, setUserName] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
 
@@ -130,15 +135,23 @@ const HomePage: React.FC = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <p className="text-md">Balance:</p>
-          <p className="font-bold">{balance} CHZ</p>
+          <span className="font-bold flex items-center justify-center gap-1">
+            {balance}
+            <span className="text-chiliz flex items-center justify-center">
+              CHZ
+              <img src={chilizImg2} alt="chiliz" className="h-5" />
+            </span>
+          </span>
         </div>
         <button
           onClick={requestFaucet}
           disabled={isFaucetLoading}
-          className={`bg-chiliz text-slate-50 px-4 py-2 rounded hover:bg-chiliz/80 mr-2 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
+          className={`bg-chiliz flex items-end justify-center gap-1 text-slate-50 px-4 py-2 rounded hover:bg-chiliz/80 mr-2 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
         >
-          {isFaucetLoading ? "Requesting..." : "Request Faucet"}
+          {isFaucetLoading ? "Requesting " : "Request "}
+          <img src={chilizImg1} alt="chiliz" className="h-6" />
+          {"CHZ"}
         </button>
 
       </div>

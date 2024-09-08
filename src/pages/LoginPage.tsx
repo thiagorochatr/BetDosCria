@@ -37,7 +37,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-pattern bg-no-repeat bg-center">
-      <div className="p-6 bg-white rounded-xl shadow-xl">
+      <div className="p-6 bg-slate-50 rounded-xl shadow-xl">
         <h1 className="mb-4 text-2xl font-bold text-center">NAME OR LOGO</h1>
         {!loggedIn && (
           <button

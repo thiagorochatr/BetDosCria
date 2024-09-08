@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { ChatMessage } from "../interfaces/IChatMessage";
 import { formatWalletAddress } from "../tools/formatWalletAddress";
+import xmtpLogo from "../assets/logomark.svg";
+import xmtpIcon from "../assets/x-mark-white.svg";
 
 interface ChatGameProps {
   messages: ChatMessage[];
@@ -27,7 +29,10 @@ export function ChatGame(props: ChatGameProps) {
 
   return (
     <div className="">
-      <h3 className="text-xl font-semibold mb-4">Chat</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-semibold">Chat</h3>
+        <img src={xmtpLogo} alt="xmtp" className="bg-slate-400 h-6 px-2 py-1 rounded-xl" />
+      </div>
       <div className="border rounded p-4 mb-4 max-h-[480px] overflow-y-auto">
         {props.messages.map((msg, index) => (
           <div key={index} className="mb-2">
@@ -59,9 +64,10 @@ export function ChatGame(props: ChatGameProps) {
         />
         <button
           onClick={handleSendMessage}
-          className="bg-chiliz h-10 text-slate-50 px-3 text-lg rounded hover:bg-chiliz/90"
+          className="flex items-center justify-center gap-1 bg-chiliz h-10 text-slate-50 px-3 text-lg rounded hover:bg-chiliz/90"
         >
           Send
+          <img src={xmtpIcon} alt="xmtp" className="h-4" />
         </button>
       </div>
 
