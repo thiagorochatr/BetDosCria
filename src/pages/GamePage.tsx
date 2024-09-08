@@ -1,33 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { ActivityGame } from "../components/ActivityGame";
+import { Activity } from "../interfaces/IActivity";
+import { TopHolder } from "../interfaces/ITopHolder";
+import { TopHoldersGame } from "../components/TopHoldersGame";
+import { GameInfo } from "../interfaces/IGameInfo";
+import { ChatMessage } from "../interfaces/IChatMessage";
 
-interface GameInfo {
-  name: string;
-  image: string;
-  startDate: string;
-  endDate: string;
-  totalPlayers: number;
-  jackpot: number;
-}
-
-interface TopHolder {
-  address: string;
-  amount: number;
-}
-
-interface Activity {
-  address: string;
-  action: string;
-  amount: number;
-  timestamp: string;
-}
-
-interface ChatMessage {
-  senderAddress: string;
-  content: string;
-  timestamp: string;
-}
+const tabs = ['Details', 'Chat', 'Activity', 'Top Holders'];
 
 const GamePage: React.FC = () => {
   const { contractAddress } = useParams<{ contractAddress: string }>();
@@ -42,14 +23,49 @@ const GamePage: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [conversation, setConversation] = useState<any>(null);
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(0);
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const [indicatorStyle, setIndicatorStyle] = useState({});
   console.log(provider);
 
   useEffect(() => {
+    const setIndicator = () => {
+      const currentTab = tabsRef.current[activeTab];
+      if (currentTab) {
+        setIndicatorStyle({
+          left: `${currentTab.offsetLeft}px`,
+          width: `${currentTab.offsetWidth}px`,
+        });
+      }
+    };
+
+    setIndicator();
+    window.addEventListener('resize', setIndicator);
+    
     if (isInitialized && web3auth?.connected) {
       fetchGameData();
       initializeConversation();
     }
-  }, [isInitialized, web3auth, contractAddress]);
+
+    return () => window.removeEventListener('resize', setIndicator);
+
+  }, [activeTab, isInitialized, web3auth, contractAddress]);
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 0:
+        return <div>Details Content</div>;
+      case 1:
+        return <div>Chat Content</div>;
+      case 2:
+        return <ActivityGame activities={activities} />;
+      case 3:
+        return <TopHoldersGame topHolders={topHolders} />;
+      default:
+        return null;
+    }
+  };
+
 
   const fetchGameData = async () => {
     // Mock data - replace with actual contract calls
@@ -155,6 +171,7 @@ const GamePage: React.FC = () => {
   };
 
   return (
+    <>
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Game Details</h1>
@@ -165,6 +182,9 @@ const GamePage: React.FC = () => {
           Go Back
         </button>
       </div>
+
+
+
 
       {gameInfo && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -209,30 +229,7 @@ const GamePage: React.FC = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Top 5 Holders</h3>
-          <ul>
-            {topHolders.map((holder, index) => (
-              <li key={index} className="mb-2">
-                {holder.address}: {holder.amount} CHZ
-              </li>
-            ))}
-          </ul>
-        </div>
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Activity</h3>
-          <ul>
-            {activities.map((activity, index) => (
-              <li key={index} className="mb-2">
-                {activity.address} {activity.action} {activity.amount} CHZ at{" "}
-                {activity.timestamp}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
 
       <div className="mt-8">
         <h3 className="text-xl font-semibold mb-4">Chat</h3>
@@ -271,7 +268,66 @@ const GamePage: React.FC = () => {
         </div>
       </div>
     </div>
+
+    <div className="max-w-4xl mx-auto p-4">
+      <div className="relative">
+        <div className="flex space-x-4 border-b">
+          {tabs.map((tab, index) => (
+            <button
+              key={tab}
+              ref={(el) => (tabsRef.current[index] = el)}
+              className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
+                activeTab === index ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
+              }`}
+              onClick={() => setActiveTab(index)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <div
+          className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
+          style={indicatorStyle}
+        />
+      </div>
+      <div className="mt-4 transition-all duration-300 ease-in-out">
+        {renderTabContent()}
+      </div>
+    </div>
+    
+    </>
   );
+
+
+  // return (
+    // <div className="max-w-4xl mx-auto p-4">
+    //   <div className="relative">
+    //     <div className="flex space-x-4 border-b">
+    //       {tabs.map((tab, index) => (
+    //         <button
+    //           key={tab}
+    //           ref={(el) => (tabsRef.current[index] = el)}
+    //           className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
+    //             activeTab === index ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'
+    //           }`}
+    //           onClick={() => setActiveTab(index)}
+    //         >
+    //           {tab}
+    //         </button>
+    //       ))}
+    //     </div>
+    //     <div
+    //       className="absolute bottom-0 h-0.5 bg-blue-600 transition-all duration-300"
+    //       style={indicatorStyle}
+    //     />
+    //   </div>
+    //   <div className="mt-4 transition-all duration-300 ease-in-out">
+    //     {renderTabContent()}
+    //   </div>
+    // </div>
+  // );
+
+
 };
 
 export default GamePage;
