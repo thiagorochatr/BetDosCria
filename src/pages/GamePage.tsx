@@ -10,12 +10,14 @@ import { ChatMessage } from "../interfaces/IChatMessage";
 import { FaArrowLeft } from "react-icons/fa";
 import { ChatGame } from "../components/ChatGame";
 import { DetailsGame } from "../components/DetailsGame";
+import { GameDetails, useGame } from "../contexts/GameContext";
 
-const tabs = ['Details', 'Chat', 'Activity', 'Top Holders'];
+const tabs = ["Details", "Chat", "Activity", "Top Holders"];
 
 const GamePage: React.FC = () => {
   const { contractAddress } = useParams<{ contractAddress: string }>();
   const { web3auth, provider, xmtpClient, isInitialized } = useAuth();
+  const { gameDetails } = useGame();
   const [gameInfo, setGameInfo] = useState<GameInfo | null>(null);
   const [topHolders, setTopHolders] = useState<TopHolder[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -40,21 +42,37 @@ const GamePage: React.FC = () => {
     };
 
     setIndicator();
-    window.addEventListener('resize', setIndicator);
-    
+    window.addEventListener("resize", setIndicator);
+
     if (isInitialized && web3auth?.connected) {
       fetchGameData();
       initializeConversation();
     }
 
-    return () => window.removeEventListener('resize', setIndicator);
-
+    return () => window.removeEventListener("resize", setIndicator);
   }, [activeTab, isInitialized, web3auth, contractAddress]);
-
+  const singleGame = gameDetails.find(
+    (game: GameDetails) =>
+      game.contractAddress.toLowerCase() === contractAddress?.toLowerCase()
+  );
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <DetailsGame gameInfo={gameInfo} />;
+        return (
+          <DetailsGame
+            gameInfo={{
+              name: singleGame?.title ?? "",
+              image: singleGame?.image ?? "",
+              sideA: singleGame?.sideA ?? "",
+              sideB: singleGame?.sideB ?? "",
+              contractAddress: contractAddress ?? "",
+              startDate: "",
+              endDate: "",
+              totalPlayers: 100,
+              jackpot: 1000,
+            }}
+          />
+        );
       case 1:
         return <ChatGame messages={messages} conversation={conversation} />;
       case 2:
@@ -65,7 +83,6 @@ const GamePage: React.FC = () => {
         return null;
     }
   };
-
 
   const fetchGameData = async () => {
     // Mock data - replace with actual contract calls
@@ -172,7 +189,9 @@ const GamePage: React.FC = () => {
                 key={tab}
                 ref={(el) => (tabsRef.current[index] = el)}
                 className={`py-2 px-4 text-sm font-medium transition-colors duration-300 ${
-                  activeTab === index ? 'text-chiliz' : 'text-slate-400 hover:text-slate-600'
+                  activeTab === index
+                    ? "text-chiliz"
+                    : "text-slate-400 hover:text-slate-600"
                 }`}
                 onClick={() => setActiveTab(index)}
               >
@@ -191,7 +210,6 @@ const GamePage: React.FC = () => {
       </div>
     </div>
   );
-
 };
 
 export default GamePage;
