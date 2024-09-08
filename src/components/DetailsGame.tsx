@@ -55,7 +55,7 @@ export function DetailsGame({ gameInfo }: DetailsGameProps) {
               <select
                 value={betSide}
                 onChange={(e) => setBetSide(e.target.value as "A" | "B")}
-                className="px-4 py-2 h-10 bg-transparent placeholder-slate-400 outline-none flex-grow rounded border border-slate-600"
+                className="px-4 py-2 h-10 bg-transparent placeholder-slate-400 rounded border border-slate-600"
               >
                 <option value="A">Side A</option>
                 <option value="B">Side B</option>
