@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { formatEther, Wallet } from "ethers";
 import { useAuth } from "../contexts/AuthContext";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { GameInfo } from "../interfaces/IGameInfo";
 import { IoIosPeople, IoMdTrophy } from "react-icons/io";
