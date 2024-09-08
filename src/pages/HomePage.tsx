@@ -62,14 +62,14 @@ const HomePage: React.FC = () => {
 
     // Mock data for games - replace with actual contract calls
     setAvailableGames([
-      { id: 1, name: "Game 1", contractAddress: "0x123...", starred:false },
-      { id: 4, name: "Game 5", contractAddress: "0x456...", starred:false },
-      { id: 5, name: "Game 6", contractAddress: "0x567...", starred:false },
-      { id: 6, name: "Game 2", contractAddress: "0x678...", starred:false },
+      { id: 1, name: "Game 1", contractAddress: "0x123...", starred: false },
+      { id: 4, name: "Game 5", contractAddress: "0x456...", starred: false },
+      { id: 5, name: "Game 6", contractAddress: "0x567...", starred: false },
+      { id: 6, name: "Game 2", contractAddress: "0x678...", starred: false },
     ]);
     setParticipatingGames([
-      { id: 2, name: "Game 3", contractAddress: "0x234...", starred:false },
-      { id: 3, name: "Game 4", contractAddress: "0x345...", starred:false },
+      { id: 2, name: "Game 3", contractAddress: "0x234...", starred: false },
+      { id: 3, name: "Game 4", contractAddress: "0x345...", starred: false },
     ]);
   };
 
@@ -101,7 +101,7 @@ const HomePage: React.FC = () => {
   };
 
   const navItems = [
-    { icon: <TbBeta size={26} /> , label: 'All' },
+    { icon: <TbBeta size={26} />, label: 'All' },
     { icon: <GiSoccerBall size={26} />, label: 'UEFA' },
     { icon: <FaFootballBall size={26} />, label: 'NFL' },
     { icon: <GiBasketballBasket size={26} />, label: 'NBA' },
@@ -110,10 +110,10 @@ const HomePage: React.FC = () => {
   ];
 
   const toggleStarred = (gameId: number) => {
-    setAvailableGames(games => games.map(game => 
+    setAvailableGames(games => games.map(game =>
       game.id === gameId ? { ...game, starred: !game.starred } : game
     ));
-    setParticipatingGames(games => games.map(game => 
+    setParticipatingGames(games => games.map(game =>
       game.id === gameId ? { ...game, starred: !game.starred } : game
     ));
   };
@@ -131,24 +131,22 @@ const HomePage: React.FC = () => {
           <p className="font-bold">{balance} CHZ</p>
         </div>
         <button
-            onClick={requestFaucet}
-            disabled={isFaucetLoading}
-            className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2 ${
-              isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
+          onClick={requestFaucet}
+          disabled={isFaucetLoading}
+          className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
-          >
-            {isFaucetLoading ? "Requesting..." : "Request Faucet"}
-          </button>
-        
+        >
+          {isFaucetLoading ? "Requesting..." : "Request Faucet"}
+        </button>
+
       </div>
 
       {faucetResponse && (
         <div
-          className={`mb-4 p-4 rounded ${
-            faucetResponse.message.includes("successful")
+          className={`mb-4 p-4 rounded ${faucetResponse.message.includes("successful")
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
-          }`}
+            }`}
         >
           <p>{faucetResponse.message}</p>
           {faucetResponse.txHash && (
@@ -174,14 +172,14 @@ const HomePage: React.FC = () => {
             type="text"
             placeholder="Search..."
             className="bg-transparent text-lg text-center shadow-2xl placeholder-slate-400 outline-none flex-1 border border-slate-600 rounded-xl"
-            // onChange={}
+          // onChange={}
           />
         </div>
       </div>
-      
+
       {address && (
         <div className="mb-8">
-          <div className="w-full overflow-x-auto shadow-md scrollbar-hide" 
+          <div className="w-full overflow-x-auto shadow-md scrollbar-hide"
             style={{
               WebkitOverflowScrolling: 'touch',
               scrollbarWidth: 'none',
@@ -220,7 +218,7 @@ const HomePage: React.FC = () => {
                 <button
                   onClick={() => viewGameDetails(game.contractAddress)}
                   className="flex items-center justify-center gap-1 mt-2 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
-                  >
+                >
                   View Details
                   <FaArrowRight />
                 </button>
@@ -253,7 +251,7 @@ const HomePage: React.FC = () => {
                 <button
                   onClick={() => viewGameDetails(game.contractAddress)}
                   className="flex items-center justify-center gap-1 mt-2 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
-                  >
+                >
                   View Details
                   <FaArrowRight />
                 </button>
