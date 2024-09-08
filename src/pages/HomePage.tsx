@@ -11,7 +11,7 @@ import { BsPersonWheelchair } from "react-icons/bs";
 import { formatWalletAddress } from "../tools/formatWalletAddress";
 import chilizImg1 from "../assets/chiliz-logo-2023.svg"
 import chilizImg2 from "../assets/chiliz-logo-v3.png"
-
+import betinho from "../assets/betinho-logo.png"
 
 interface Game {
   id: number;
@@ -128,7 +128,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-pattern bg-no-repeat bg-center">
       <div className="flex justify-between items-center mb-8">
-        <span>Logo</span>
+        <img src={betinho} alt="betinho" className="h-24" />
         <Profile handleLogout={handleLogout} address={address ? address : '000000000'} name={userName} avatarUrl={avatarUrl} /> {/*@remind */}
       </div>
 
@@ -146,7 +146,7 @@ const HomePage: React.FC = () => {
         <button
           onClick={requestFaucet}
           disabled={isFaucetLoading}
-          className={`bg-chiliz flex items-end justify-center gap-1 text-slate-50 px-4 py-2 rounded hover:bg-chiliz/80 mr-2 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
+          className={`bg-chiliz flex items-end justify-center gap-1 text-slate-50 px-4 py-2 rounded hover:bg-chiliz/80 ${isFaucetLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
         >
           {isFaucetLoading ? "Requesting " : "Request "}
