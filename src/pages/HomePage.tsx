@@ -6,8 +6,9 @@ import useBalance from "../hooks/useBalance";
 import { Profile } from "../components/Profile";
 import { TbBeta } from "react-icons/tb";
 import { GiBasketballBasket, GiGolfFlag, GiSoccerBall } from "react-icons/gi";
-import { FaArrowRight, FaFootballBall, FaRegStar, FaStar } from "react-icons/fa";
+import { FaArrowRight, FaExternalLinkAlt, FaFootballBall, FaRegStar, FaStar } from "react-icons/fa";
 import { BsPersonWheelchair } from "react-icons/bs";
+import { formatWalletAddress } from "../tools/formatWalletAddress";
 
 
 interface Game {
@@ -33,6 +34,7 @@ const HomePage: React.FC = () => {
     null
   );
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { balance, isLoading, error } = useBalance();
   const [userName, setUserName] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
@@ -142,26 +144,28 @@ const HomePage: React.FC = () => {
       </div>
 
       {faucetResponse && (
-        <div
-          className={`mb-4 p-4 rounded ${faucetResponse.message.includes("successful")
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-            }`}
-        >
-          <p>{faucetResponse.message}</p>
-          {faucetResponse.txHash && (
-            <p>
-              Transaction Hash:{" "}
-              <a
-                href={`https://testnet.chiliscan.com/address/${faucetResponse.txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-600"
-              >
-                {faucetResponse.txHash}
-              </a>
-            </p>
-          )}
+        <div>
+          <div
+            className={`flex items-start justify-center flex-col gap-0.5 mb-4 p-2 text-xs rounded ${faucetResponse.message.includes("successful")
+                ? "bg-green-300/80 text-slate-900"
+                : "bg-red-300/80 text-slate-900"
+              }`}
+          >
+            <p>{faucetResponse.message}!</p>
+            {faucetResponse.txHash && (
+              <p className="flex items-start justify-center gap-1">
+                Transaction Hash:
+                <a
+                  href={`https://testnet.chiliscan.com/tx/${faucetResponse.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500/90 hover:text-blue-600/90 flex items-center gap-1"
+                >
+                  {formatWalletAddress(faucetResponse.txHash, 10)}{" "}{<FaExternalLinkAlt />}
+                </a>
+              </p>
+            )}
+          </div>
         </div>
       )}
 
