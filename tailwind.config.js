@@ -9,6 +9,9 @@ export default {
       backgroundImage: {
         'pattern': "url('/public/bg.png')",
       },
+      colors: {
+        'chiliz': '#FF1256',
+      },
     },
   },
   plugins: [],
